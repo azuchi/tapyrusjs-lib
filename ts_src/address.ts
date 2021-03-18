@@ -11,6 +11,7 @@ const typeforce = require('typeforce');
 export interface Base58CheckResult {
   hash: Buffer;
   version: number;
+  colorId?: Buffer;
 }
 
 export interface Bech32Result {
@@ -19,17 +20,34 @@ export interface Bech32Result {
   data: Buffer;
 }
 
+const PUBKEY_HASH_LENGTH = 20;
+const COLOR_ID_LENGTH = 33;
+const UNCOLORED_LENGTH = 1 + PUBKEY_HASH_LENGTH; // 21
+const COLORED_LENGTH = 1 + PUBKEY_HASH_LENGTH + COLOR_ID_LENGTH; // 54
+
 export function fromBase58Check(address: string): Base58CheckResult {
-  const payload = bs58check.decode(address);
+  const payload: Buffer = bs58check.decode(address);
 
   // TODO: 4.0.0, move to "toOutputScript"
-  if (payload.length < 21) throw new TypeError(address + ' is too short');
-  if (payload.length > 21) throw new TypeError(address + ' is too long');
+  if (payload.length < UNCOLORED_LENGTH)
+    throw new TypeError(`${address} is too short(${payload.length})`);
+  if (payload.length > COLORED_LENGTH)
+    throw new TypeError(`${address} is too long(${payload.length})`);
 
   const version = payload.readUInt8(0);
-  const hash = payload.slice(1);
-
-  return { version, hash };
+  if (payload.length > UNCOLORED_LENGTH) {
+    // Colored
+    const colorId = payload.slice(1, 1 + COLOR_ID_LENGTH);
+    const hash = payload.slice(1 + COLOR_ID_LENGTH);
+    if (hash.length !== PUBKEY_HASH_LENGTH) {
+      throw new TypeError(`Invalid hash(${hash})`);
+    }
+    return { version, colorId, hash };
+  } else {
+    // Uncolored
+    const hash = payload.slice(1);
+    return { version, hash };
+  }
 }
 
 export function fromBech32(address: string): Bech32Result {
@@ -43,12 +61,23 @@ export function fromBech32(address: string): Bech32Result {
   };
 }
 
-export function toBase58Check(hash: Buffer, version: number): string {
+export function toBase58Check(
+  hash: Buffer,
+  version: number,
+  colorId?: Buffer,
+): string {
   typeforce(types.tuple(types.Hash160bit, types.UInt8), arguments);
 
-  const payload = Buffer.allocUnsafe(21);
+  const payload = colorId
+    ? Buffer.allocUnsafe(COLORED_LENGTH)
+    : Buffer.allocUnsafe(UNCOLORED_LENGTH);
   payload.writeUInt8(version, 0);
-  hash.copy(payload, 1);
+  if (colorId) {
+    colorId.copy(payload, 1);
+    hash.copy(payload, 1 + COLOR_ID_LENGTH);
+  } else {
+    hash.copy(payload, 1);
+  }
 
   return bs58check.encode(payload);
 }
@@ -87,9 +116,15 @@ export function toOutputScript(address: string, network?: Network): Buffer {
     if (decodeBase58.version === network.scriptHash)
       return payments.p2sh({ hash: decodeBase58.hash }).output as Buffer;
     if (decodeBase58.version === network.coloredPubKeyHash)
-      return payments.cp2pkh({ hash: decodeBase58.hash }).output as Buffer;
+      return payments.cp2pkh({
+        hash: decodeBase58.hash,
+        colorId: decodeBase58.colorId,
+      }).output as Buffer;
     if (decodeBase58.version === network.coloredScriptHash)
-      return payments.cp2sh({ hash: decodeBase58.hash }).output as Buffer;
+      return payments.cp2sh({
+        hash: decodeBase58.hash,
+        colorId: decodeBase58.colorId,
+      }).output as Buffer;
   } else {
     try {
       decodeBech32 = fromBech32(address);
