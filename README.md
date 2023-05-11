@@ -1,6 +1,6 @@
 # Tapyrus JS (tapyrusjs-lib)
 
-[![Build Status](https://travis-ci.org/chaintope/tapyrusjs-lib.png?branch=master)](https://travis-ci.org/chaintope/tapyrusjs-lib)
+[![Build Status](https://github.com/chaintope/tapyrusjs-lib/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/chaintope/tapyrusjs-lib/actions/workflows/ci.yml)
 [![NPM](https://img.shields.io/npm/v/tapyrusjs-lib.svg)](https://www.npmjs.org/package/tapyrusjs-lib)
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
