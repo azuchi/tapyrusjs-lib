@@ -1,13 +1,6 @@
 name: Run Tests
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-
-permissions:
-  contents: read
+on: [push, pull_request]
 
 jobs:
   actions:
