@@ -1,21 +1,13 @@
 name: Run Tests
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-
-permissions:
-  contents: read
+on: [push, pull_request]
 
 jobs:
   actions:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        node-version: [ 14 ]
+        node-version: [ 16.x, 18.x, 20.x ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
