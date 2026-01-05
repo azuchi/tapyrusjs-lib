@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { beforeEach, describe, it } from 'mocha';
-import * as proxyquire from 'proxyquire';
+const proxyquire = require('proxyquire');
 import { ECPair, ECPairInterface, networks as NETWORKS } from '..';
 import * as fixtures from './fixtures/ecpair.json';
 const hoodwink = require('hoodwink');
