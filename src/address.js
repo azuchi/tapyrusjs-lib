@@ -1,5 +1,11 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.fromBase58Check = fromBase58Check;
+exports.fromBech32 = fromBech32;
+exports.toBase58Check = toBase58Check;
+exports.toBech32 = toBech32;
+exports.fromOutputScript = fromOutputScript;
+exports.toOutputScript = toOutputScript;
 const networks = require('./networks');
 const payments = require('./payments');
 const bscript = require('./script');
@@ -33,7 +39,6 @@ function fromBase58Check(address) {
     return { version, hash };
   }
 }
-exports.fromBase58Check = fromBase58Check;
 function fromBech32(address) {
   const result = bech32.decode(address);
   const data = bech32.fromWords(result.words.slice(1));
@@ -43,7 +48,6 @@ function fromBech32(address) {
     data: Buffer.from(data),
   };
 }
-exports.fromBech32 = fromBech32;
 function toBase58Check(hash, version, colorId) {
   typeforce(types.tuple(types.Hash160bit, types.UInt8), arguments);
   const payload = colorId
@@ -58,13 +62,11 @@ function toBase58Check(hash, version, colorId) {
   }
   return bs58check.encode(payload);
 }
-exports.toBase58Check = toBase58Check;
 function toBech32(data, version, prefix) {
   const words = bech32.toWords(data);
   words.unshift(version);
   return bech32.encode(prefix, words);
 }
-exports.toBech32 = toBech32;
 function fromOutputScript(output, network) {
   try {
     const payment = payments.util.fromOutputScript(output, network);
@@ -72,7 +74,6 @@ function fromOutputScript(output, network) {
   } catch (e) {}
   throw new Error(bscript.toASM(output) + ' has no matching Address');
 }
-exports.fromOutputScript = fromOutputScript;
 function toOutputScript(address, network) {
   network = network || networks.prod;
   let decodeBase58;
@@ -112,4 +113,3 @@ function toOutputScript(address, network) {
   }
   throw new Error(address + ' has no matching Script');
 }
-exports.toOutputScript = toOutputScript;

@@ -1,9 +1,9 @@
 import { Stack } from './payments';
 import * as scriptNumber from './script_number';
 import * as scriptSignature from './script_signature';
-export declare type OpCode = number;
+export type OpCode = number;
 export declare const OPS: {
-    [index: string]: number;
+    [index: string]: OpCode;
 };
 export declare function isPushOnly(value: Stack): boolean;
 export declare function compile(chunks: Buffer | Stack): Buffer;

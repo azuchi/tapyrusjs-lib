@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.p2pk = p2pk;
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
@@ -35,7 +36,7 @@ function p2pk(a, opts) {
   });
   lazy.prop(o, 'signature', () => {
     if (!a.input) return;
-    return util_1.chunksFn(a.input)()[0];
+    return (0, util_1.chunksFn)(a.input)()[0];
   });
   lazy.prop(o, 'input', () => {
     if (!a.signature) return;
@@ -60,7 +61,7 @@ function p2pk(a, opts) {
         throw new TypeError('Signature mismatch');
     }
     if (a.input) {
-      if (util_1.chunksFn(a.input)().length !== 1)
+      if ((0, util_1.chunksFn)(a.input)().length !== 1)
         throw new TypeError('Input is invalid');
       if (!bscript.isCanonicalScriptSignature(o.signature))
         throw new TypeError('Input has invalid signature');
@@ -68,4 +69,3 @@ function p2pk(a, opts) {
   }
   return Object.assign(o, a);
 }
-exports.p2pk = p2pk;

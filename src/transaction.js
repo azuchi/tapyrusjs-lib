@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.Transaction = void 0;
 const bufferutils_1 = require('./bufferutils');
 const bcrypto = require('./crypto');
 const bscript = require('./script');
@@ -343,7 +344,7 @@ class Transaction {
     const buffer = bcrypto.hash256(
       this.__toBuffer(undefined, undefined, false, true),
     );
-    return bufferutils_1.reverseBuffer(buffer).toString('hex');
+    return (0, bufferutils_1.reverseBuffer)(buffer).toString('hex');
   }
   toBuffer(buffer, initialOffset) {
     return this.__toBuffer(buffer, initialOffset, true);
@@ -402,6 +403,7 @@ class Transaction {
     return buffer;
   }
 }
+exports.Transaction = Transaction;
 Transaction.DEFAULT_SEQUENCE = 0xffffffff;
 Transaction.SIGHASH_ALL = 0x01;
 Transaction.SIGHASH_NONE = 0x02;
@@ -409,4 +411,3 @@ Transaction.SIGHASH_SINGLE = 0x03;
 Transaction.SIGHASH_ANYONECANPAY = 0x80;
 Transaction.ADVANCED_TRANSACTION_MARKER = 0x00;
 Transaction.ADVANCED_TRANSACTION_FLAG = 0x01;
-exports.Transaction = Transaction;

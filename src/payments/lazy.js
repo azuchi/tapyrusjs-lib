@@ -1,5 +1,7 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.prop = prop;
+exports.value = value;
 function prop(object, name, f) {
   Object.defineProperty(object, name, {
     configurable: true,
@@ -19,7 +21,6 @@ function prop(object, name, f) {
     },
   });
 }
-exports.prop = prop;
 function value(f) {
   let _value;
   return () => {
@@ -28,4 +29,3 @@ function value(f) {
     return _value;
   };
 }
-exports.value = value;

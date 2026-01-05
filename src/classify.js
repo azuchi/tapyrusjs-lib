@@ -1,5 +1,9 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.types = void 0;
+exports.input = classifyInput;
+exports.output = classifyOutput;
+exports.witness = classifyWitness;
 const script_1 = require('./script');
 const coloredPubKeyHash = require('./templates/coloredpubkeyhash');
 const coloredScriptHash = require('./templates/coloredscripthash');
@@ -33,7 +37,7 @@ function classifyOutput(script) {
   if (coloredPubKeyHash.output.check(script)) return types.CP2PKH;
   if (coloredScriptHash.output.check(script)) return types.CP2SH;
   // XXX: optimization, below functions .decompile before use
-  const chunks = script_1.decompile(script);
+  const chunks = (0, script_1.decompile)(script);
   if (!chunks) throw new TypeError('Invalid script');
   if (multisig.output.check(chunks)) return types.P2MS;
   if (pubKey.output.check(chunks)) return types.P2PK;
@@ -41,10 +45,9 @@ function classifyOutput(script) {
   if (nullData.output.check(chunks)) return types.NULLDATA;
   return types.NONSTANDARD;
 }
-exports.output = classifyOutput;
 function classifyInput(script, allowIncomplete) {
   // XXX: optimization, below functions .decompile before use
-  const chunks = script_1.decompile(script);
+  const chunks = (0, script_1.decompile)(script);
   if (!chunks) throw new TypeError('Invalid script');
   if (pubKeyHash.input.check(chunks)) return types.P2PKH;
   if (scriptHash.input.check(chunks, allowIncomplete)) return types.P2SH;
@@ -52,14 +55,12 @@ function classifyInput(script, allowIncomplete) {
   if (pubKey.input.check(chunks)) return types.P2PK;
   return types.NONSTANDARD;
 }
-exports.input = classifyInput;
 function classifyWitness(script, allowIncomplete) {
   // XXX: optimization, below functions .decompile before use
-  const chunks = script_1.decompile(script);
+  const chunks = (0, script_1.decompile)(script);
   if (!chunks) throw new TypeError('Invalid script');
   if (witnessPubKeyHash.input.check(chunks)) return types.P2WPKH;
   if (witnessScriptHash.input.check(chunks, allowIncomplete))
     return types.P2WSH;
   return types.NONSTANDARD;
 }
-exports.witness = classifyWitness;

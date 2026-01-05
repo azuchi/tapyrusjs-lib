@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.TransactionBuilder = void 0;
 const baddress = require('./address');
 const bufferutils_1 = require('./bufferutils');
 const classify = require('./classify');
@@ -50,24 +51,6 @@ function txIsTransaction(tx) {
   return tx instanceof transaction_1.Transaction;
 }
 class TransactionBuilder {
-  // WARNING: maximumFeeRate is __NOT__ to be relied on,
-  //          it's just another potential safety mechanism (safety in-depth)
-  constructor(network = networks.prod, maximumFeeRate = 2500) {
-    this.network = network;
-    this.maximumFeeRate = maximumFeeRate;
-    this.__PREV_TX_SET = {};
-    this.__INPUTS = [];
-    this.__TX = new transaction_1.Transaction();
-    this.__TX.version = 2;
-    this.__USE_LOW_R = false;
-    console.warn(
-      'Deprecation Warning: TransactionBuilder will be removed in the future. ' +
-        '(v6.x.x or later) Please use the Psbt class instead. Examples of usage ' +
-        'are available in the transactions-psbt.js integration test file on our ' +
-        'Github. A high level explanation is available in the psbt.ts and psbt.js ' +
-        'files as well.',
-    );
-  }
   static fromTransaction(transaction, network) {
     const txb = new TransactionBuilder(network);
     // Copy transaction fields
@@ -90,6 +73,24 @@ class TransactionBuilder {
       fixMultisigOrder(input, transaction, i);
     });
     return txb;
+  }
+  // WARNING: maximumFeeRate is __NOT__ to be relied on,
+  //          it's just another potential safety mechanism (safety in-depth)
+  constructor(network = networks.prod, maximumFeeRate = 2500) {
+    this.network = network;
+    this.maximumFeeRate = maximumFeeRate;
+    this.__PREV_TX_SET = {};
+    this.__INPUTS = [];
+    this.__TX = new transaction_1.Transaction();
+    this.__TX.version = 2;
+    this.__USE_LOW_R = false;
+    console.warn(
+      'Deprecation Warning: TransactionBuilder will be removed in the future. ' +
+        '(v6.x.x or later) Please use the Psbt class instead. Examples of usage ' +
+        'are available in the transactions-psbt.js integration test file on our ' +
+        'Github. A high level explanation is available in the psbt.ts and psbt.js ' +
+        'files as well.',
+    );
   }
   setLowR(setting) {
     typeforce(typeforce.maybe(typeforce.Boolean), setting);
@@ -125,7 +126,7 @@ class TransactionBuilder {
     // is it a hex string?
     if (txIsString(txHash)) {
       // transaction hashs's are displayed in reverse order, un-reverse it
-      txHash = bufferutils_1.reverseBuffer(Buffer.from(txHash, 'hex'));
+      txHash = (0, bufferutils_1.reverseBuffer)(Buffer.from(txHash, 'hex'));
       // is it a Transaction object?
     } else if (txIsTransaction(txHash)) {
       const txOut = txHash.outs[vout];

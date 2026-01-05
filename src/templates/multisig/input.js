@@ -1,6 +1,7 @@
 'use strict';
 // OP_0 [signatures ...]
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.check = check;
 const bscript = require('../../script');
 const script_1 = require('../../script');
 function partialSignature(value) {
@@ -17,7 +18,6 @@ function check(script, allowIncomplete) {
   }
   return chunks.slice(1).every(bscript.isCanonicalScriptSignature);
 }
-exports.check = check;
 check.toJSON = () => {
   return 'multisig input';
 };

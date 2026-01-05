@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.cp2sh = cp2sh;
 const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
@@ -38,7 +39,7 @@ function cp2sh(a, opts) {
     network = (a.redeem && a.redeem.network) || networks_1.prod;
   }
   const o = { network };
-  const _address = util_1.coloredAddressFn(a.address);
+  const _address = (0, util_1.coloredAddressFn)(a.address);
   // output dependents
   lazy.prop(o, 'address', () => {
     if (!o.hash) return;
@@ -69,7 +70,7 @@ function cp2sh(a, opts) {
   // input dependents
   lazy.prop(o, 'redeem', () => {
     if (!a.input) return;
-    return util_1.redeemFn(a, network)();
+    return (0, util_1.redeemFn)(a, network)();
   });
   lazy.prop(o, 'input', () => {
     if (!a.redeem || !a.redeem.input || !a.redeem.output) return;
@@ -104,11 +105,11 @@ function cp2sh(a, opts) {
       colorId = _address().colorId;
     }
     if (a.hash) {
-      util_1.checkHash(hash, a.hash);
+      (0, util_1.checkHash)(hash, a.hash);
       hash = a.hash;
     }
     if (a.colorId) {
-      colorId = util_1.validColorId(colorId, a.colorId);
+      colorId = (0, util_1.validColorId)(colorId, a.colorId);
     }
     if (a.output) {
       if (
@@ -121,24 +122,23 @@ function cp2sh(a, opts) {
       )
         throw new TypeError('Output is invalid');
       const colorId2 = a.output.slice(1, 34);
-      util_1.validColorId(colorId, colorId2);
+      (0, util_1.validColorId)(colorId, colorId2);
       const hash2 = a.output.slice(37, 57);
-      util_1.checkHash(hash, hash2);
+      (0, util_1.checkHash)(hash, hash2);
       hash = hash2;
     }
     if (a.input) {
-      const hash2 = util_1.checkInput(
-        util_1.chunksFn(a.input),
-        util_1.redeemFn(a, network),
+      const hash2 = (0, util_1.checkInput)(
+        (0, util_1.chunksFn)(a.input),
+        (0, util_1.redeemFn)(a, network),
         hash,
       );
       if (hash2) {
         hash = hash2;
       }
     }
-    util_1.checkRedeem(a, network, util_1.redeemFn(a, network), hash);
-    util_1.checkWitness(a);
+    (0, util_1.checkRedeem)(a, network, (0, util_1.redeemFn)(a, network), hash);
+    (0, util_1.checkWitness)(a);
   }
   return Object.assign(o, a);
 }
-exports.cp2sh = cp2sh;

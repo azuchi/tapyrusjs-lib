@@ -49,11 +49,13 @@ export declare class Psbt {
     private __CACHE;
     private opts;
     constructor(opts?: PsbtOptsOptional, data?: PsbtBase);
-    readonly inputCount: number;
-    version: number;
-    locktime: number;
-    readonly txInputs: PsbtTxInput[];
-    readonly txOutputs: PsbtTxOutput[];
+    get inputCount(): number;
+    get version(): number;
+    set version(version: number);
+    get locktime(): number;
+    set locktime(locktime: number);
+    get txInputs(): PsbtTxInput[];
+    get txOutputs(): PsbtTxOutput[];
     combine(...those: Psbt[]): this;
     clone(): Psbt;
     setMaximumFeeRate(satoshiPerByte: number): void;
@@ -101,7 +103,7 @@ interface PsbtOptsOptional {
 }
 interface PsbtInputExtended extends PsbtInput, TransactionInput {
 }
-declare type PsbtOutputExtended = PsbtOutputExtendedAddress | PsbtOutputExtendedScript;
+type PsbtOutputExtended = PsbtOutputExtendedAddress | PsbtOutputExtendedScript;
 interface PsbtOutputExtendedAddress extends PsbtOutput {
     address: string;
     value: number;
@@ -145,7 +147,7 @@ interface HDSignerAsync extends HDSignerBase {
  *   ie. `Can not finalize input #${inputIndex}`
  * 2. Create the finalScriptSig and finalScriptWitness Buffers.
  */
-declare type FinalScriptsFunc = (inputIndex: number, // Which input is it?
+type FinalScriptsFunc = (inputIndex: number, // Which input is it?
 input: PsbtInput, // The PSBT input contents
 script: Buffer, // The "meaningful" locking script Buffer (redeemScript for P2SH etc.)
 isSegwit: boolean, // Is it segwit?
@@ -154,5 +156,5 @@ isP2WSH: boolean) => {
     finalScriptSig: Buffer | undefined;
     finalScriptWitness: Buffer | undefined;
 };
-declare type AllScriptType = 'witnesspubkeyhash' | 'pubkeyhash' | 'multisig' | 'pubkey' | 'nonstandard' | 'p2sh-witnesspubkeyhash' | 'p2sh-pubkeyhash' | 'p2sh-multisig' | 'p2sh-pubkey' | 'p2sh-nonstandard' | 'p2wsh-pubkeyhash' | 'p2wsh-multisig' | 'p2wsh-pubkey' | 'p2wsh-nonstandard' | 'p2sh-p2wsh-pubkeyhash' | 'p2sh-p2wsh-multisig' | 'p2sh-p2wsh-pubkey' | 'p2sh-p2wsh-nonstandard';
+type AllScriptType = 'witnesspubkeyhash' | 'pubkeyhash' | 'multisig' | 'pubkey' | 'nonstandard' | 'p2sh-witnesspubkeyhash' | 'p2sh-pubkeyhash' | 'p2sh-multisig' | 'p2sh-pubkey' | 'p2sh-nonstandard' | 'p2wsh-pubkeyhash' | 'p2wsh-multisig' | 'p2wsh-pubkey' | 'p2wsh-nonstandard' | 'p2sh-p2wsh-pubkeyhash' | 'p2sh-p2wsh-multisig' | 'p2sh-p2wsh-pubkey' | 'p2sh-p2wsh-nonstandard';
 export {};

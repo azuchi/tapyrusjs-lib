@@ -1,6 +1,7 @@
 'use strict';
 // <scriptSig> {serialized scriptPubKey script}
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.check = check;
 const bscript = require('../../script');
 const p2ms = require('../multisig');
 const p2pk = require('../pubkey');
@@ -44,7 +45,6 @@ function check(script, allowIncomplete) {
     return true;
   return false;
 }
-exports.check = check;
 check.toJSON = () => {
   return 'scriptHash input';
 };

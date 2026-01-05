@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.p2wsh = p2wsh;
 const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
@@ -130,7 +131,7 @@ function p2wsh(a, opts) {
       hash = _address().data;
     }
     if (a.hash) {
-      util_1.checkHash(hash, a.hash);
+      (0, util_1.checkHash)(hash, a.hash);
       hash = a.hash;
     }
     if (a.output) {
@@ -141,7 +142,7 @@ function p2wsh(a, opts) {
       )
         throw new TypeError('Output is invalid');
       const hash2 = a.output.slice(2);
-      util_1.checkHash(hash, hash2);
+      (0, util_1.checkHash)(hash, hash2);
       hash = hash2;
     }
     if (a.redeem) {
@@ -161,7 +162,7 @@ function p2wsh(a, opts) {
           throw new TypeError('Redeem.output is invalid');
         // match hash against other sources
         const hash2 = bcrypto.sha256(a.redeem.output);
-        util_1.checkHash(hash, hash2);
+        (0, util_1.checkHash)(hash, hash2);
         hash = hash2;
       }
       if (a.redeem.input && !bscript.isPushOnly(_rchunks()))
@@ -169,7 +170,7 @@ function p2wsh(a, opts) {
       if (
         a.witness &&
         a.redeem.witness &&
-        !util_1.stacksEqual(a.witness, a.redeem.witness)
+        !(0, util_1.stacksEqual)(a.witness, a.redeem.witness)
       )
         throw new TypeError('Witness and redeem.witness mismatch');
       if (
@@ -197,4 +198,3 @@ function p2wsh(a, opts) {
   }
   return Object.assign(o, a);
 }
-exports.p2wsh = p2wsh;

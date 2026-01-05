@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.p2sh = p2sh;
 const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
@@ -37,7 +38,7 @@ function p2sh(a, opts) {
     network = (a.redeem && a.redeem.network) || networks_1.prod;
   }
   const o = { network };
-  const _address = util_1.addressFn(a.address);
+  const _address = (0, util_1.addressFn)(a.address);
   // output dependents
   lazy.prop(o, 'address', () => {
     if (!o.hash) return;
@@ -59,7 +60,7 @@ function p2sh(a, opts) {
   // input dependents
   lazy.prop(o, 'redeem', () => {
     if (!a.input) return;
-    return util_1.redeemFn(a, network)();
+    return (0, util_1.redeemFn)(a, network)();
   });
   lazy.prop(o, 'input', () => {
     if (!a.redeem || !a.redeem.input || !a.redeem.output) return;
@@ -86,7 +87,7 @@ function p2sh(a, opts) {
       hash = _address().hash;
     }
     if (a.hash) {
-      util_1.checkHash(hash, a.hash);
+      (0, util_1.checkHash)(hash, a.hash);
       hash = a.hash;
     }
     if (a.output) {
@@ -98,22 +99,21 @@ function p2sh(a, opts) {
       )
         throw new TypeError('Output is invalid');
       const hash2 = a.output.slice(2, 22);
-      util_1.checkHash(hash, hash2);
+      (0, util_1.checkHash)(hash, hash2);
       hash = hash2;
     }
     if (a.input) {
-      const hash2 = util_1.checkInput(
-        util_1.chunksFn(a.input),
-        util_1.redeemFn(a, network),
+      const hash2 = (0, util_1.checkInput)(
+        (0, util_1.chunksFn)(a.input),
+        (0, util_1.redeemFn)(a, network),
         hash,
       );
       if (hash2) {
         hash = hash2;
       }
     }
-    util_1.checkRedeem(a, network, util_1.redeemFn(a, network), hash);
-    util_1.checkWitness(a);
+    (0, util_1.checkRedeem)(a, network, (0, util_1.redeemFn)(a, network), hash);
+    (0, util_1.checkWitness)(a);
   }
   return Object.assign(o, a);
 }
-exports.p2sh = p2sh;

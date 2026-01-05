@@ -1,5 +1,9 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.makeRandom = makeRandom;
+exports.fromPrivateKey = fromPrivateKey;
+exports.fromPublicKey = fromPublicKey;
+exports.fromWIF = fromWIF;
 const NETWORKS = require('./networks');
 const types = require('./types');
 const ecc = require('tiny-secp256k1');
@@ -64,13 +68,11 @@ function fromPrivateKey(buffer, options) {
   typeforce(isOptions, options);
   return new ECPair(buffer, undefined, options);
 }
-exports.fromPrivateKey = fromPrivateKey;
 function fromPublicKey(buffer, options) {
   typeforce(ecc.isPoint, buffer);
   typeforce(isOptions, options);
   return new ECPair(undefined, buffer, options);
 }
-exports.fromPublicKey = fromPublicKey;
 function fromWIF(wifString, network) {
   const decoded = wif.decode(wifString);
   const version = decoded.version;
@@ -92,7 +94,6 @@ function fromWIF(wifString, network) {
     network: network,
   });
 }
-exports.fromWIF = fromWIF;
 function makeRandom(options) {
   typeforce(isOptions, options);
   if (options === undefined) options = {};
@@ -104,4 +105,3 @@ function makeRandom(options) {
   } while (!ecc.isPrivate(d));
   return fromPrivateKey(d, options);
 }
-exports.makeRandom = makeRandom;

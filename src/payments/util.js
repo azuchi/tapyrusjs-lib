@@ -1,5 +1,16 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.fromOutputScript = fromOutputScript;
+exports.addressFn = addressFn;
+exports.coloredAddressFn = coloredAddressFn;
+exports.chunksFn = chunksFn;
+exports.redeemFn = redeemFn;
+exports.checkHash = checkHash;
+exports.validColorId = validColorId;
+exports.stacksEqual = stacksEqual;
+exports.checkInput = checkInput;
+exports.checkWitness = checkWitness;
+exports.checkRedeem = checkRedeem;
 const bcrypto = require('../crypto');
 const networks = require('../networks');
 const payments = require('../payments');
@@ -28,7 +39,6 @@ function fromOutputScript(output, network) {
   } catch (e) {}
   throw new Error(bscript.toASM(output) + ' is not standard script');
 }
-exports.fromOutputScript = fromOutputScript;
 function addressFn(address) {
   return lazy.value(() => {
     const payload = bs58check.decode(address);
@@ -37,7 +47,6 @@ function addressFn(address) {
     return { version, hash };
   });
 }
-exports.addressFn = addressFn;
 function coloredAddressFn(address) {
   return lazy.value(() => {
     const payload = bs58check.decode(address);
@@ -47,13 +56,11 @@ function coloredAddressFn(address) {
     return { version, colorId, hash };
   });
 }
-exports.coloredAddressFn = coloredAddressFn;
 function chunksFn(script) {
   return lazy.value(() => {
     return bscript.decompile(script);
   });
 }
-exports.chunksFn = chunksFn;
 function redeemFn(a, network) {
   return lazy.value(() => {
     const chunks = chunksFn(a.input)();
@@ -65,25 +72,21 @@ function redeemFn(a, network) {
     };
   });
 }
-exports.redeemFn = redeemFn;
 function checkHash(hash, hash2) {
   if (hash.length > 0 && !hash.equals(hash2))
     throw new TypeError('Hash mismatch');
 }
-exports.checkHash = checkHash;
 function validColorId(colorId, newColorId) {
   if (colorId.length > 0 && !colorId.equals(newColorId))
     throw new TypeError('ColorId mismatch');
   return newColorId;
 }
-exports.validColorId = validColorId;
 function stacksEqual(a, b) {
   if (a.length !== b.length) return false;
   return a.every((x, i) => {
     return x.equals(b[i]);
   });
 }
-exports.stacksEqual = stacksEqual;
 function checkInput(_chunksFn, _redeemFn, hashForCheck) {
   const chunks = _chunksFn();
   if (!chunks || chunks.length < 1) throw new TypeError('Input too short');
@@ -91,7 +94,6 @@ function checkInput(_chunksFn, _redeemFn, hashForCheck) {
   if (!Buffer.isBuffer(redeem.output)) throw new TypeError('Input is invalid');
   return _checkRedeem(redeem, hashForCheck);
 }
-exports.checkInput = checkInput;
 function checkWitness(a) {
   if (a.witness) {
     if (
@@ -102,7 +104,6 @@ function checkWitness(a) {
       throw new TypeError('Witness and redeem.witness mismatch');
   }
 }
-exports.checkWitness = checkWitness;
 function checkRedeem(a, network, _redeemFn, hashForCheck) {
   if (a.redeem) {
     if (a.redeem.network && a.redeem.network !== network)
@@ -117,7 +118,6 @@ function checkRedeem(a, network, _redeemFn, hashForCheck) {
     _checkRedeem(a.redeem, hashForCheck);
   }
 }
-exports.checkRedeem = checkRedeem;
 // inlined to prevent 'no-inner-declarations' failing
 function _checkRedeem(redeem, hashForCheck) {
   let hash2 = null;

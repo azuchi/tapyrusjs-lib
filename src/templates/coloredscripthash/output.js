@@ -1,6 +1,7 @@
 'use strict';
 // {colorIdentifier} OP_COLOR OP_HASH160 {scriptHash} OP_EQUAL
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.check = check;
 const bscript = require('../../script');
 const script_1 = require('../../script');
 function check(script) {
@@ -14,7 +15,6 @@ function check(script) {
     buffer[57] === script_1.OPS.OP_EQUAL
   );
 }
-exports.check = check;
 check.toJSON = () => {
   return 'colored scriptHash output';
 };

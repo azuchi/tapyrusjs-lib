@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.dev = exports.prod = void 0;
 exports.prod = {
   messagePrefix: '\x18Tapyrus Signed Message:\n',
   bech32: 'bc',

@@ -1,6 +1,7 @@
 'use strict';
 // OP_DUP OP_HASH160 {pubKeyHash} OP_EQUALVERIFY OP_CHECKSIG
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.check = check;
 const bscript = require('../../script');
 const script_1 = require('../../script');
 function check(script) {
@@ -14,7 +15,6 @@ function check(script) {
     buffer[24] === script_1.OPS.OP_CHECKSIG
   );
 }
-exports.check = check;
 check.toJSON = () => {
   return 'pubKeyHash output';
 };

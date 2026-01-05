@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.p2pkh = p2pkh;
 const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
@@ -27,7 +28,7 @@ function p2pkh(a, opts) {
     },
     a,
   );
-  const _address = util_1.addressFn(a.address);
+  const _address = (0, util_1.addressFn)(a.address);
   const network = a.network || networks_1.prod;
   const o = { name: 'p2pkh', network };
   lazy.prop(o, 'address', () => {
@@ -54,11 +55,11 @@ function p2pkh(a, opts) {
   });
   lazy.prop(o, 'pubkey', () => {
     if (!a.input) return;
-    return util_1.chunksFn(a.input)()[1];
+    return (0, util_1.chunksFn)(a.input)()[1];
   });
   lazy.prop(o, 'signature', () => {
     if (!a.input) return;
-    return util_1.chunksFn(a.input)()[0];
+    return (0, util_1.chunksFn)(a.input)()[0];
   });
   lazy.prop(o, 'input', () => {
     if (!a.pubkey) return;
@@ -79,7 +80,7 @@ function p2pkh(a, opts) {
       hash = _address().hash;
     }
     if (a.hash) {
-      util_1.checkHash(hash, a.hash);
+      (0, util_1.checkHash)(hash, a.hash);
       hash = a.hash;
     }
     if (a.output) {
@@ -93,16 +94,16 @@ function p2pkh(a, opts) {
       )
         throw new TypeError('Output is invalid');
       const hash2 = a.output.slice(3, 23);
-      util_1.checkHash(hash, hash2);
+      (0, util_1.checkHash)(hash, hash2);
       hash = hash2;
     }
     if (a.pubkey) {
       const pkh = bcrypto.hash160(a.pubkey);
-      util_1.checkHash(hash, pkh);
+      (0, util_1.checkHash)(hash, pkh);
       hash = pkh;
     }
     if (a.input) {
-      const chunks = util_1.chunksFn(a.input)();
+      const chunks = (0, util_1.chunksFn)(a.input)();
       if (chunks.length !== 2) throw new TypeError('Input is invalid');
       if (!bscript.isCanonicalScriptSignature(chunks[0]))
         throw new TypeError('Input has invalid signature');
@@ -113,9 +114,8 @@ function p2pkh(a, opts) {
       if (a.pubkey && !a.pubkey.equals(chunks[1]))
         throw new TypeError('Pubkey mismatch');
       const pkh = bcrypto.hash160(chunks[1]);
-      util_1.checkHash(hash, pkh);
+      (0, util_1.checkHash)(hash, pkh);
     }
   }
   return Object.assign(o, a);
 }
-exports.p2pkh = p2pkh;

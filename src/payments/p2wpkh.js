@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.p2wpkh = p2wpkh;
 const bcrypto = require('../crypto');
 const networks_1 = require('../networks');
 const bscript = require('../script');
@@ -88,7 +89,7 @@ function p2wpkh(a, opts) {
       hash = _address().data;
     }
     if (a.hash) {
-      util_1.checkHash(hash, a.hash);
+      (0, util_1.checkHash)(hash, a.hash);
       hash = a.hash;
     }
     if (a.output) {
@@ -99,12 +100,12 @@ function p2wpkh(a, opts) {
       )
         throw new TypeError('Output is invalid');
       const hash2 = a.output.slice(2);
-      util_1.checkHash(hash, hash2);
+      (0, util_1.checkHash)(hash, hash2);
       hash = hash2;
     }
     if (a.pubkey) {
       const pkh = bcrypto.hash160(a.pubkey);
-      util_1.checkHash(hash, pkh);
+      (0, util_1.checkHash)(hash, pkh);
       hash = pkh;
       if (!ecc.isPoint(a.pubkey) || a.pubkey.length !== 33)
         throw new TypeError('Invalid pubkey for p2wpkh');
@@ -120,9 +121,8 @@ function p2wpkh(a, opts) {
       if (a.pubkey && !a.pubkey.equals(a.witness[1]))
         throw new TypeError('Pubkey mismatch');
       const pkh = bcrypto.hash160(a.witness[1]);
-      util_1.checkHash(hash, pkh);
+      (0, util_1.checkHash)(hash, pkh);
     }
   }
   return Object.assign(o, a);
 }
-exports.p2wpkh = p2wpkh;

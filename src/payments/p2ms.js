@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.p2ms = p2ms;
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
@@ -107,7 +108,7 @@ function p2ms(a, opts) {
         throw new TypeError('Output is invalid');
       if (a.m !== undefined && a.m !== o.m) throw new TypeError('m mismatch');
       if (a.n !== undefined && a.n !== o.n) throw new TypeError('n mismatch');
-      if (a.pubkeys && !util_1.stacksEqual(a.pubkeys, o.pubkeys))
+      if (a.pubkeys && !(0, util_1.stacksEqual)(a.pubkeys, o.pubkeys))
         throw new TypeError('Pubkeys mismatch');
     }
     if (a.pubkeys) {
@@ -129,7 +130,7 @@ function p2ms(a, opts) {
         !o.signatures.every(isAcceptableSignature)
       )
         throw new TypeError('Input has invalid signature(s)');
-      if (a.signatures && !util_1.stacksEqual(a.signatures, o.signatures))
+      if (a.signatures && !(0, util_1.stacksEqual)(a.signatures, o.signatures))
         throw new TypeError('Signature mismatch');
       if (a.m !== undefined && a.m !== a.signatures.length)
         throw new TypeError('Signature count mismatch');
@@ -137,4 +138,3 @@ function p2ms(a, opts) {
   }
   return Object.assign(o, a);
 }
-exports.p2ms = p2ms;

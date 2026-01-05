@@ -1,6 +1,7 @@
 'use strict';
 // OP_0 {scriptHash}
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.check = check;
 const bscript = require('../../script');
 const script_1 = require('../../script');
 function check(script) {
@@ -11,7 +12,6 @@ function check(script) {
     buffer[1] === 0x20
   );
 }
-exports.check = check;
 check.toJSON = () => {
   return 'Witness scriptHash output';
 };

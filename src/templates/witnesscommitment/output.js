@@ -1,6 +1,9 @@
 'use strict';
 // OP_RETURN {aa21a9ed} {commitment}
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.check = check;
+exports.encode = encode;
+exports.decode = decode;
 const bscript = require('../../script');
 const script_1 = require('../../script');
 const types = require('../../types');
@@ -15,7 +18,6 @@ function check(script) {
     buffer.slice(2, 6).equals(HEADER)
   );
 }
-exports.check = check;
 check.toJSON = () => {
   return 'Witness commitment output';
 };
@@ -26,9 +28,7 @@ function encode(commitment) {
   commitment.copy(buffer, 4);
   return bscript.compile([script_1.OPS.OP_RETURN, buffer]);
 }
-exports.encode = encode;
 function decode(buffer) {
   typeforce(check, buffer);
   return bscript.decompile(buffer)[1].slice(4, 36);
 }
-exports.decode = decode;

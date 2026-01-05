@@ -1,6 +1,7 @@
 'use strict';
 // {signature} {pubKey}
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.check = check;
 const bscript = require('../../script');
 function isCompressedCanonicalPubKey(pubKey) {
   return bscript.isCanonicalPubKey(pubKey) && pubKey.length === 33;
@@ -13,7 +14,6 @@ function check(script) {
     isCompressedCanonicalPubKey(chunks[1])
   );
 }
-exports.check = check;
 check.toJSON = () => {
   return 'witnessPubKeyHash input';
 };

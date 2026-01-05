@@ -1,5 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
+exports.p2data = p2data;
 const networks_1 = require('../networks');
 const bscript = require('../script');
 const lazy = require('./lazy');
@@ -35,10 +36,9 @@ function p2data(a, opts) {
       if (chunks[0] !== OPS.OP_RETURN) throw new TypeError('Output is invalid');
       if (!chunks.slice(1).every(typef.Buffer))
         throw new TypeError('Output is invalid');
-      if (a.data && !util_1.stacksEqual(a.data, o.data))
+      if (a.data && !(0, util_1.stacksEqual)(a.data, o.data))
         throw new TypeError('Data mismatch');
     }
   }
   return Object.assign(o, a);
 }
-exports.p2data = p2data;
