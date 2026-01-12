@@ -1,8 +1,9 @@
 import * as assert from 'assert';
-import * as bip32 from 'bip32';
 import * as bip39 from 'bip39';
 import { describe, it } from 'mocha';
 import * as bitcoin from '../..';
+
+const { bip32 } = bitcoin;
 
 function getAddress(node: any, network?: any): string {
   return bitcoin.payments.p2pkh({ pubkey: node.publicKey, network }).address!;
@@ -111,7 +112,7 @@ describe('bitcoinjs-lib (BIP32)', () => {
 
     const { address } = bitcoin.payments.p2sh({
       redeem: bitcoin.payments.p2wpkh({
-        pubkey: child.publicKey,
+        pubkey: Buffer.from(child.publicKey),
         network: bitcoin.networks.dev,
       }),
       network: bitcoin.networks.dev,

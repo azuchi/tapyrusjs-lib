@@ -1,10 +1,11 @@
 import * as assert from 'assert';
-import * as bip32 from 'bip32';
 import { describe, it } from 'mocha';
 import * as bitcoin from '../..';
 import { regtestUtils } from './_regtest';
 const rng = require('randombytes');
 const regtest = regtestUtils.network;
+
+const { bip32 } = bitcoin;
 
 // See bottom of file for some helper functions used to make the payment objects needed.
 
@@ -589,10 +590,10 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
 
   it('can create (and broadcast via 3PBP) a Transaction, w/ a P2WPKH input using HD', async () => {
     const hdRoot = bip32.fromSeed(rng(64));
-    const masterFingerprint = hdRoot.fingerprint;
+    const masterFingerprint = Buffer.from(hdRoot.fingerprint);
     const path = "m/84'/0'/0'/0/0";
     const childNode = hdRoot.derivePath(path);
-    const pubkey = childNode.publicKey;
+    const pubkey = Buffer.from(childNode.publicKey);
 
     // This information should be added to your input via updateInput
     // You can add multiple bip32Derivation objects for multisig, but
@@ -611,7 +612,7 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
         },
       ],
     };
-    const p2wpkh = createPayment('p2wpkh', [childNode]);
+    const p2wpkh = createPayment('p2wpkh', [childNode as any]);
     const inputData = await getInputData(5e4, p2wpkh.payment, true, 'noredeem');
     {
       const { hash, index, witnessUtxo } = inputData;
@@ -628,13 +629,10 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
         address: regtestUtils.RANDOM_ADDRESS,
         value: 2e4,
       })
-      .signInputHD(0, hdRoot); // must sign with root!!!
+      .signInputHD(0, hdRoot as any); // must sign with root!!!
 
     assert.strictEqual(psbt.validateSignaturesOfInput(0), true);
-    assert.strictEqual(
-      psbt.validateSignaturesOfInput(0, childNode.publicKey),
-      true,
-    );
+    assert.strictEqual(psbt.validateSignaturesOfInput(0, pubkey), true);
     psbt.finalizeAllInputs();
 
     const tx = psbt.extractTransaction();

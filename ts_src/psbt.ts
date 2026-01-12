@@ -538,7 +538,11 @@ export class Psbt {
           hdKeyPair,
         );
         const promises = signers.map(signer =>
-          this.signInputAsync(inputIndex, signer, sighashTypes),
+          this.signInputAsync(
+            inputIndex,
+            signer as Signer | SignerAsync,
+            sighashTypes,
+          ),
         );
         return Promise.all(promises)
           .then(() => {
@@ -627,8 +631,11 @@ export class Psbt {
 
     const partialSig = [
       {
-        pubkey: keyPair.publicKey,
-        signature: bscript.signature.encode(keyPair.sign(hash), sighashType),
+        pubkey: Buffer.from(keyPair.publicKey),
+        signature: bscript.signature.encode(
+          Buffer.from(keyPair.sign(hash)),
+          sighashType,
+        ),
       },
     ];
 
@@ -655,8 +662,11 @@ export class Psbt {
       return Promise.resolve(keyPair.sign(hash)).then(signature => {
         const partialSig = [
           {
-            pubkey: keyPair.publicKey,
-            signature: bscript.signature.encode(signature, sighashType),
+            pubkey: Buffer.from(keyPair.publicKey),
+            signature: bscript.signature.encode(
+              Buffer.from(signature),
+              sighashType,
+            ),
           },
         ];
 
@@ -763,11 +773,11 @@ interface HDSignerBase {
   /**
    * DER format compressed publicKey buffer
    */
-  publicKey: Buffer;
+  publicKey: Buffer | Uint8Array;
   /**
    * The first 4 bytes of the sha256-ripemd160 of the publicKey
    */
-  fingerprint: Buffer;
+  fingerprint: Buffer | Uint8Array;
 }
 
 interface HDSigner extends HDSignerBase {
@@ -780,7 +790,7 @@ interface HDSigner extends HDSignerBase {
    * Input hash (the "message digest") for the signature algorithm
    * Return a 64 byte signature (32 byte r and 32 byte s in that order)
    */
-  sign(hash: Buffer): Buffer;
+  sign(hash: Buffer | Uint8Array): Buffer | Uint8Array;
 }
 
 /**
@@ -788,7 +798,7 @@ interface HDSigner extends HDSignerBase {
  */
 interface HDSignerAsync extends HDSignerBase {
   derivePath(path: string): HDSignerAsync;
-  sign(hash: Buffer): Promise<Buffer>;
+  sign(hash: Buffer | Uint8Array): Promise<Buffer | Uint8Array>;
 }
 
 /**
@@ -930,8 +940,14 @@ function bip32DerivationIsMine(
   root: HDSigner,
 ): (d: Bip32Derivation) => boolean {
   return (d: Bip32Derivation): boolean => {
-    if (!d.masterFingerprint.equals(root.fingerprint)) return false;
-    if (!root.derivePath(d.path).publicKey.equals(d.pubkey)) return false;
+    if (!Buffer.from(d.masterFingerprint).equals(Buffer.from(root.fingerprint)))
+      return false;
+    if (
+      !Buffer.from(root.derivePath(d.path).publicKey).equals(
+        Buffer.from(d.pubkey),
+      )
+    )
+      return false;
     return true;
   };
 }
@@ -1415,14 +1431,18 @@ function getSignersFromHD(
   inputIndex: number,
   inputs: PsbtInput[],
   hdKeyPair: HDSigner | HDSignerAsync,
-): Array<Signer | SignerAsync> {
+): Array<HDSigner | HDSignerAsync> {
   const input = checkForInput(inputs, inputIndex);
   if (!input.bip32Derivation || input.bip32Derivation.length === 0) {
     throw new Error('Need bip32Derivation to sign with HD');
   }
   const myDerivations = input.bip32Derivation
     .map(bipDv => {
-      if (bipDv.masterFingerprint.equals(hdKeyPair.fingerprint)) {
+      if (
+        Buffer.from(bipDv.masterFingerprint).equals(
+          Buffer.from(hdKeyPair.fingerprint),
+        )
+      ) {
         return bipDv;
       } else {
         return;
@@ -1434,9 +1454,9 @@ function getSignersFromHD(
       'Need one bip32Derivation masterFingerprint to match the HDSigner fingerprint',
     );
   }
-  const signers: Array<Signer | SignerAsync> = myDerivations.map(bipDv => {
+  const signers: Array<HDSigner | HDSignerAsync> = myDerivations.map(bipDv => {
     const node = hdKeyPair.derivePath(bipDv!.path);
-    if (!bipDv!.pubkey.equals(node.publicKey)) {
+    if (!Buffer.from(bipDv!.pubkey).equals(Buffer.from(node.publicKey))) {
       throw new Error('pubkey did not match bip32Derivation');
     }
     return node;

@@ -273,7 +273,7 @@ describe('ECPair', () => {
             1,
           );
 
-          assert.strictEqual(keyPair.sign(hash), signature);
+          assert.deepStrictEqual(keyPair.sign(hash), signature);
         }),
       );
 

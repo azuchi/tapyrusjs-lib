@@ -116,11 +116,11 @@ interface HDSignerBase {
     /**
      * DER format compressed publicKey buffer
      */
-    publicKey: Buffer;
+    publicKey: Buffer | Uint8Array;
     /**
      * The first 4 bytes of the sha256-ripemd160 of the publicKey
      */
-    fingerprint: Buffer;
+    fingerprint: Buffer | Uint8Array;
 }
 interface HDSigner extends HDSignerBase {
     /**
@@ -132,14 +132,14 @@ interface HDSigner extends HDSignerBase {
      * Input hash (the "message digest") for the signature algorithm
      * Return a 64 byte signature (32 byte r and 32 byte s in that order)
      */
-    sign(hash: Buffer): Buffer;
+    sign(hash: Buffer | Uint8Array): Buffer | Uint8Array;
 }
 /**
  * Same as above but with async sign method
  */
 interface HDSignerAsync extends HDSignerBase {
     derivePath(path: string): HDSignerAsync;
-    sign(hash: Buffer): Promise<Buffer>;
+    sign(hash: Buffer | Uint8Array): Promise<Buffer | Uint8Array>;
 }
 /**
  * This function must do two things:
