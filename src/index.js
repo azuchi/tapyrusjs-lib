@@ -1,8 +1,8 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.TransactionBuilder = exports.Transaction = exports.opcodes = exports.Psbt = exports.Block = exports.script = exports.payments = exports.networks = exports.crypto = exports.bufferutils = exports.bip32 = exports.address = exports.ECPair = void 0;
-const bip32 = require('bip32');
-exports.bip32 = bip32;
+const bip32_1 = require('bip32');
+const ecc = require('tiny-secp256k1');
 const address = require('./address');
 exports.address = address;
 const bufferutils = require('./bufferutils');
@@ -17,6 +17,8 @@ const payments = require('./payments');
 exports.payments = payments;
 const script = require('./script');
 exports.script = script;
+const bip32 = (0, bip32_1.BIP32Factory)(ecc);
+exports.bip32 = bip32;
 var block_1 = require('./block');
 Object.defineProperty(exports, 'Block', {
   enumerable: true,

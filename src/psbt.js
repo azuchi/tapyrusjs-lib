@@ -527,8 +527,11 @@ class Psbt {
     );
     const partialSig = [
       {
-        pubkey: keyPair.publicKey,
-        signature: bscript.signature.encode(keyPair.sign(hash), sighashType),
+        pubkey: Buffer.from(keyPair.publicKey),
+        signature: bscript.signature.encode(
+          Buffer.from(keyPair.sign(hash)),
+          sighashType,
+        ),
       },
     ];
     this.data.updateInput(inputIndex, { partialSig });
@@ -552,8 +555,11 @@ class Psbt {
       return Promise.resolve(keyPair.sign(hash)).then(signature => {
         const partialSig = [
           {
-            pubkey: keyPair.publicKey,
-            signature: bscript.signature.encode(signature, sighashType),
+            pubkey: Buffer.from(keyPair.publicKey),
+            signature: bscript.signature.encode(
+              Buffer.from(signature),
+              sighashType,
+            ),
           },
         ];
         this.data.updateInput(inputIndex, { partialSig });
@@ -721,8 +727,14 @@ const isP2WSHScript = isPaymentFactory(payments.p2wsh);
 const isP2SHScript = isPaymentFactory(payments.p2sh);
 function bip32DerivationIsMine(root) {
   return d => {
-    if (!d.masterFingerprint.equals(root.fingerprint)) return false;
-    if (!root.derivePath(d.path).publicKey.equals(d.pubkey)) return false;
+    if (!Buffer.from(d.masterFingerprint).equals(Buffer.from(root.fingerprint)))
+      return false;
+    if (
+      !Buffer.from(root.derivePath(d.path).publicKey).equals(
+        Buffer.from(d.pubkey),
+      )
+    )
+      return false;
     return true;
   };
 }
@@ -1106,7 +1118,11 @@ function getSignersFromHD(inputIndex, inputs, hdKeyPair) {
   }
   const myDerivations = input.bip32Derivation
     .map(bipDv => {
-      if (bipDv.masterFingerprint.equals(hdKeyPair.fingerprint)) {
+      if (
+        Buffer.from(bipDv.masterFingerprint).equals(
+          Buffer.from(hdKeyPair.fingerprint),
+        )
+      ) {
         return bipDv;
       } else {
         return;
@@ -1120,7 +1136,7 @@ function getSignersFromHD(inputIndex, inputs, hdKeyPair) {
   }
   const signers = myDerivations.map(bipDv => {
     const node = hdKeyPair.derivePath(bipDv.path);
-    if (!bipDv.pubkey.equals(node.publicKey)) {
+    if (!Buffer.from(bipDv.pubkey).equals(Buffer.from(node.publicKey))) {
       throw new Error('pubkey did not match bip32Derivation');
     }
     return node;

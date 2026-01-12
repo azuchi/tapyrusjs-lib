@@ -348,7 +348,7 @@ describe(`Psbt`, () => {
           await assert.doesNotReject(async () => {
             await psbtThatShouldsign.signInputHDAsync(
               f.shouldSign.inputToCheck,
-              bip32.fromBase58(f.shouldSign.xprv),
+              bip32.fromBase58(f.shouldSign.xprv) as any,
               (f.shouldSign as any).sighashTypes || undefined,
             );
           });
@@ -359,7 +359,7 @@ describe(`Psbt`, () => {
           await assert.rejects(async () => {
             await psbtThatShouldThrow.signInputHDAsync(
               f.shouldThrow.inputToCheck,
-              bip32.fromBase58(f.shouldThrow.xprv),
+              bip32.fromBase58(f.shouldThrow.xprv) as any,
               (f.shouldThrow as any).sighashTypes || undefined,
             );
           }, new RegExp(f.shouldThrow.errorMessage));
@@ -381,7 +381,7 @@ describe(`Psbt`, () => {
           assert.doesNotThrow(() => {
             psbtThatShouldsign.signInputHD(
               f.shouldSign.inputToCheck,
-              bip32.fromBase58(f.shouldSign.xprv),
+              bip32.fromBase58(f.shouldSign.xprv) as any,
               (f.shouldSign as any).sighashTypes || undefined,
             );
           });
@@ -392,7 +392,7 @@ describe(`Psbt`, () => {
           assert.throws(() => {
             psbtThatShouldThrow.signInputHD(
               f.shouldThrow.inputToCheck,
-              bip32.fromBase58(f.shouldThrow.xprv),
+              bip32.fromBase58(f.shouldThrow.xprv) as any,
               (f.shouldThrow as any).sighashTypes || undefined,
             );
           }, new RegExp(f.shouldThrow.errorMessage));
@@ -413,7 +413,7 @@ describe(`Psbt`, () => {
           const psbtThatShouldsign = Psbt.fromBase64(f.shouldSign.psbt);
           await assert.doesNotReject(async () => {
             await psbtThatShouldsign.signAllInputsHDAsync(
-              bip32.fromBase58(f.shouldSign.xprv),
+              bip32.fromBase58(f.shouldSign.xprv) as any,
               (f.shouldSign as any).sighashTypes || undefined,
             );
           });
@@ -423,7 +423,7 @@ describe(`Psbt`, () => {
           const psbtThatShouldThrow = Psbt.fromBase64(f.shouldThrow.psbt);
           await assert.rejects(async () => {
             await psbtThatShouldThrow.signAllInputsHDAsync(
-              bip32.fromBase58(f.shouldThrow.xprv),
+              bip32.fromBase58(f.shouldThrow.xprv) as any,
               (f.shouldThrow as any).sighashTypes || undefined,
             );
           }, new RegExp('No inputs were signed'));
@@ -442,7 +442,7 @@ describe(`Psbt`, () => {
           const psbtThatShouldsign = Psbt.fromBase64(f.shouldSign.psbt);
           assert.doesNotThrow(() => {
             psbtThatShouldsign.signAllInputsHD(
-              bip32.fromBase58(f.shouldSign.xprv),
+              bip32.fromBase58(f.shouldSign.xprv) as any,
               (f.shouldSign as any).sighashTypes || undefined,
             );
           });
@@ -452,7 +452,7 @@ describe(`Psbt`, () => {
           const psbtThatShouldThrow = Psbt.fromBase64(f.shouldThrow.psbt);
           assert.throws(() => {
             psbtThatShouldThrow.signAllInputsHD(
-              bip32.fromBase58(f.shouldThrow.xprv),
+              bip32.fromBase58(f.shouldThrow.xprv) as any,
               (f.shouldThrow as any).sighashTypes || undefined,
             );
           }, new RegExp('No inputs were signed'));
@@ -710,14 +710,14 @@ describe(`Psbt`, () => {
         index: 0,
         bip32Derivation: [
           {
-            masterFingerprint: root.fingerprint,
+            masterFingerprint: Buffer.from(root.fingerprint),
             path,
-            pubkey: root.derivePath(path).publicKey,
+            pubkey: Buffer.from(root.derivePath(path).publicKey),
           },
         ],
       });
-      assert.strictEqual(psbt.inputHasHDKey(0, root), true);
-      assert.strictEqual(psbt.inputHasHDKey(0, root2), false);
+      assert.strictEqual(psbt.inputHasHDKey(0, root as any), true);
+      assert.strictEqual(psbt.inputHasHDKey(0, root2 as any), false);
     });
   });
 
@@ -812,14 +812,14 @@ describe(`Psbt`, () => {
           value: 2000,
           bip32Derivation: [
             {
-              masterFingerprint: root.fingerprint,
+              masterFingerprint: Buffer.from(root.fingerprint),
               path,
-              pubkey: root.derivePath(path).publicKey,
+              pubkey: Buffer.from(root.derivePath(path).publicKey),
             },
           ],
         });
-      assert.strictEqual(psbt.outputHasHDKey(0, root), true);
-      assert.strictEqual(psbt.outputHasHDKey(0, root2), false);
+      assert.strictEqual(psbt.outputHasHDKey(0, root as any), true);
+      assert.strictEqual(psbt.outputHasHDKey(0, root2 as any), false);
     });
   });
 
