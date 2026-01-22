@@ -42,3 +42,8 @@ export const dev: Network = {
   coloredScriptHash: 0xc5,
   wif: 0xef,
 };
+
+export enum NetworkId {
+  TAPYRUS_API = 15215628,
+  TESTNET = 1939510133,
+}
