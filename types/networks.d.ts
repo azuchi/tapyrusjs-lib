@@ -14,4 +14,8 @@ interface Bip32 {
 }
 export declare const prod: Network;
 export declare const dev: Network;
+export declare enum NetworkId {
+    TAPYRUS_API = 15215628,
+    TESTNET = 1939510133
+}
 export {};
