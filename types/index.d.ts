@@ -14,7 +14,7 @@ export { OPS as opcodes } from './script';
 export { Transaction } from './transaction';
 export { TransactionBuilder } from './transaction_builder';
 export { ECPairInterface, Signer, SignerAsync } from './ecpair';
-export { Network } from './networks';
+export { Network, NetworkId } from './networks';
 export { Payment, PaymentCreator, PaymentOpts, Stack, StackElement, } from './payments';
 export { OpCode } from './script';
 export { Input as TxInput, Output as TxOutput } from './transaction';

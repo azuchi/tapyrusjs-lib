@@ -1,6 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.dev = exports.prod = void 0;
+exports.NetworkId = exports.dev = exports.prod = void 0;
 exports.prod = {
   messagePrefix: '\x18Tapyrus Signed Message:\n',
   bech32: 'bc',
@@ -27,3 +27,8 @@ exports.dev = {
   coloredScriptHash: 0xc5,
   wif: 0xef,
 };
+var NetworkId;
+(function(NetworkId) {
+  NetworkId[(NetworkId['TAPYRUS_API'] = 15215628)] = 'TAPYRUS_API';
+  NetworkId[(NetworkId['TESTNET'] = 1939510133)] = 'TESTNET';
+})(NetworkId || (exports.NetworkId = NetworkId = {}));

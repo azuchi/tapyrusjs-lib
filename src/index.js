@@ -1,6 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.TransactionBuilder = exports.Transaction = exports.opcodes = exports.Psbt = exports.Block = exports.script = exports.payments = exports.networks = exports.crypto = exports.bufferutils = exports.bip32 = exports.address = exports.ECPair = void 0;
+exports.NetworkId = exports.TransactionBuilder = exports.Transaction = exports.opcodes = exports.Psbt = exports.Block = exports.script = exports.payments = exports.networks = exports.crypto = exports.bufferutils = exports.bip32 = exports.address = exports.ECPair = void 0;
 const bip32_1 = require('bip32');
 const ecc = require('tiny-secp256k1');
 const address = require('./address');
@@ -52,5 +52,12 @@ Object.defineProperty(exports, 'TransactionBuilder', {
   enumerable: true,
   get: function() {
     return transaction_builder_1.TransactionBuilder;
+  },
+});
+var networks_1 = require('./networks');
+Object.defineProperty(exports, 'NetworkId', {
+  enumerable: true,
+  get: function() {
+    return networks_1.NetworkId;
   },
 });
