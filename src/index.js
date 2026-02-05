@@ -1,6 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.NetworkId = exports.TransactionBuilder = exports.Transaction = exports.opcodes = exports.Psbt = exports.Block = exports.script = exports.payments = exports.networks = exports.crypto = exports.bufferutils = exports.bip32 = exports.address = exports.ECPair = void 0;
+exports.NetworkId = exports.TransactionBuilder = exports.Transaction = exports.opcodes = exports.Psbt = exports.Metadata = exports.Block = exports.script = exports.payments = exports.networks = exports.crypto = exports.bufferutils = exports.bip32 = exports.address = exports.ECPair = void 0;
 const bip32_1 = require('bip32');
 const ecc = require('tiny-secp256k1');
 const address = require('./address');
@@ -24,6 +24,13 @@ Object.defineProperty(exports, 'Block', {
   enumerable: true,
   get: function() {
     return block_1.Block;
+  },
+});
+var metadata_1 = require('./metadata');
+Object.defineProperty(exports, 'Metadata', {
+  enumerable: true,
+  get: function() {
+    return metadata_1.Metadata;
   },
 });
 var psbt_1 = require('./psbt');
