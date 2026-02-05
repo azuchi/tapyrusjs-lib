@@ -1,0 +1,4 @@
+{
+  "require": ["test/ts-node-register"],
+  "recursive": true
+}

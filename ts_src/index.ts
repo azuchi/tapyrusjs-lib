@@ -23,6 +23,14 @@ export {
 };
 
 export { Block } from './block';
+export {
+  Metadata,
+  Issuer,
+  Attribute,
+  MetadataFields,
+  TokenType,
+  OutPoint,
+} from './metadata';
 export { Psbt, PsbtTxInput, PsbtTxOutput } from './psbt';
 export { OPS as opcodes } from './script';
 export { Transaction } from './transaction';
