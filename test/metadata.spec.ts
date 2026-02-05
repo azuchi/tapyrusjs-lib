@@ -42,7 +42,7 @@ describe('Metadata', () => {
     });
   });
 
-  describe('hash', () => {
+  describe('digest', () => {
     it('returns a 32-byte buffer', () => {
       const metadata = new Metadata({
         version: '1.0',
@@ -50,8 +50,8 @@ describe('Metadata', () => {
         symbol: 'TEST',
         tokenType: 'reissuable',
       });
-      const hash = metadata.digest();
-      assert.strictEqual(hash.length, 32);
+      const digest = metadata.digest();
+      assert.strictEqual(digest.length, 32);
     });
   });
 
